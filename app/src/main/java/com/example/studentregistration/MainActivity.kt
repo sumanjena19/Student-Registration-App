@@ -6,6 +6,7 @@ import com.example.studentregistration.Database.StudentDao
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -29,6 +30,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var registerBtn : Button
     private lateinit var deregisterBtn : Button
+    private var isSelected : Boolean = false
+    private var updateString : String = "UPDATE"
+    private var deregisterString : String = "DEREGISTER"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -45,11 +49,14 @@ class MainActivity : AppCompatActivity() {
         registerBtn=findViewById(R.id.registerBtn)
         deregisterBtn=findViewById(R.id.clearBtn)
         recyclerView=findViewById(R.id.studentListViewId)
+
         val studentViewModelFactory= StudentViewModelFactory(studentDao)
         viewModel=ViewModelProvider(this, studentViewModelFactory)[StudentViewModel::class.java]
 
         recyclerView.layoutManager=LinearLayoutManager(this)
-        val adapter = StudentViewAdapter()
+        val adapter = StudentViewAdapter { student: Student ->
+            studentItemClicked(student)
+        }
         recyclerView.adapter=adapter
 
         viewModel.enrolledStudentList.observe(this, Observer {
@@ -70,13 +77,29 @@ class MainActivity : AppCompatActivity() {
     }
     private fun register(student: Student){
         viewModel.enrollStudent(student)
+        if(isSelected){
+            registerBtn.setText(updateString)
+            deregisterBtn.setText(deregisterString)
+            isSelected=false
+        }
     }
     private fun deregister(student: Student){
         viewModel.deregisterStudent(student)
+        registerBtn.setText(updateString)
+        deregisterBtn.setText(deregisterString)
+        isSelected=false
     }
     private fun clear(){
         name.text=null
         rollNumber.text=null
         emailId.text=null
+    }
+    private fun studentItemClicked(student : Student){
+            registerBtn.setText(updateString)
+            deregisterBtn.setText(deregisterString)
+            isSelected=true
+            name.setText(student.name)
+            emailId.setText(student.emailId)
+            rollNumber.setText(student.rollNumber)
     }
 }

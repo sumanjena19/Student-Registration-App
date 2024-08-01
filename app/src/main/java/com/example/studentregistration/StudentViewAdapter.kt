@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentregistration.Database.Student
 import java.util.zip.Inflater
 
-class StudentViewAdapter() : RecyclerView.Adapter<StudentViewAdapter.StudentViewHolder>() {
+class StudentViewAdapter(private var onItemClicked : (Student)->Unit) : RecyclerView.Adapter<StudentViewAdapter.StudentViewHolder>() {
 
     private val studentList = ArrayList<Student>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
@@ -23,7 +24,7 @@ class StudentViewAdapter() : RecyclerView.Adapter<StudentViewAdapter.StudentView
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
-        holder.bind(studentList[position])
+        holder.bind(studentList[position],onItemClicked)
     }
 
     fun setStudentList(studentList : List<Student>){
@@ -35,10 +36,13 @@ class StudentViewAdapter() : RecyclerView.Adapter<StudentViewAdapter.StudentView
         private var name: TextView = view.findViewById<TextView>(R.id.studentNameId)
         private var emailId: TextView = view.findViewById<TextView>(R.id.studentEmailId)
         private var rollNumber: TextView =view.findViewById<TextView>(R.id.studentEnrollNumID)
-        fun bind(student : Student){
+        fun bind(student : Student,onItemClicked: (Student) -> Unit){
             name.text=student.name
             emailId.text=student.emailId
             rollNumber.text=student.rollNumber
+            view.setOnClickListener {
+                onItemClicked(student)
+            }
         }
     }
 }
