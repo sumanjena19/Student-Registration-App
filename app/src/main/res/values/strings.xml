@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Student Registration</string>
+    <string name="student_registration_portal">Student Registration Portal</string>
+    <string name="name">Name</string>
+    <string name="email_id">Email Id</string>
+    <string name="enrollment_number">Enrollment Number</string>
+    <string name="register">Register</string>
+    <string name="clear">Clear</string>
+</resources>
